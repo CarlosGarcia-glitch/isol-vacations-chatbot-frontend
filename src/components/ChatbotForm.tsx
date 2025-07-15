@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { useTranslations } from '../contexts/AppContext';
+
 const ChatbotForm = ({
   handleOnChange,
   handleOnSubmit,
@@ -9,12 +11,15 @@ const ChatbotForm = ({
   handleOnChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleOnSubmit: () => void;
 }) => {
+  const t = useTranslations();
+
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     handleOnSubmit();
   };
+
   return (
-    <form onSubmit={onSubmit} action="#" className="chat-form">
+    <form onSubmit={onSubmit} className="chat-form">
       <label className="selected-file">
         <input
           id="document"
@@ -28,12 +33,12 @@ const ChatbotForm = ({
         <p className="file-name">
           {file ? (
             <>
-              Selected: <b>{file}</b>
+              {t.selected} <b>{file}</b>
             </>
           ) : (
             <>
               <span className="material-symbols-outlined">cloud_upload</span>
-              <b>Click to upload</b> or drag and drop
+              <span dangerouslySetInnerHTML={{ __html: t.input.placehonder }} />
             </>
           )}
         </p>
