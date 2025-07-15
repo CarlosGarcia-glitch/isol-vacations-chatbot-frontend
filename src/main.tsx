@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import App from './App';
+import { RouterProvider } from './providers/RouteProvider';
 import './index.scss';
 import { AppProvider } from './contexts/AppContext';
 
@@ -10,7 +10,7 @@ if (rootElement) {
   createRoot(rootElement).render(
     <StrictMode>
       <AppProvider>
-        <App />
+        <RouterProvider />
       </AppProvider>
     </StrictMode>,
   );
