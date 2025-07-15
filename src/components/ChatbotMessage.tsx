@@ -1,4 +1,4 @@
-import React from 'react';
+import { useTranslations } from '../contexts/AppContext';
 import ChatbotIcon from './icons/ChatbotIcon';
 
 export interface IChat {
@@ -7,10 +7,14 @@ export interface IChat {
 }
 
 const ChatbotMessage = ({ role, message }: IChat) => {
+  const t = useTranslations();
+
   return (
     <div className={`message ${role}-message`}>
       {role === 'bot' && <ChatbotIcon />}
-      <p className="message-text">{message}</p>
+      <p className="message-text">
+        {message === 'processing' ? t.processing : message}
+      </p>
     </div>
   );
 };
