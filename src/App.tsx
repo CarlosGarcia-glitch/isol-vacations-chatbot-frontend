@@ -1,15 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import ChatbotForm from './components/ChatbotForm';
 import ChatbotMessage, { IChat } from './components/ChatbotMessage';
 import ChatbotIcon from './components/icons/ChatbotIcon';
-import ChatbotForm from './components/ChatbotForm';
+import { useAppContext, useTranslations } from './contexts/AppContext';
 
 function App() {
+  const t = useTranslations();
+  const { language, setLanguage } = useAppContext();
+
   const [file, setFile] = useState<string>('');
   const [chatHistory, setChatHistory] = useState<IChat[]>([]);
   const chatBodyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // smooth auto scroll
     chatBodyRef.current?.scrollTo({
       top: chatBodyRef.current.scrollHeight,
       behavior: 'smooth',
@@ -23,18 +28,20 @@ function App() {
   };
 
   const handleOnSubmit = () => {
-    setChatHistory((history) => [...history, { role: 'user', message: file }]);
-    setTimeout(() => {
-      setChatHistory((history) => [
-        ...history,
-        {
-          role: 'bot',
-          message:
-            'Estamos procesando tu archivo, te enviaremos una respuesta al terminar.',
-        },
-      ]);
-    }, 600);
+    setChatHistory((history) => [
+      ...history,
+      { role: 'user', message: file },
+      {
+        role: 'bot',
+        message: 'processing',
+      },
+    ]);
     setFile('');
+  };
+
+  const toggleLanguage = () => {
+    const newLang = language === 'en' ? 'es' : 'en';
+    setLanguage(newLang);
   };
 
   return (
@@ -44,10 +51,13 @@ function App() {
         <div className="chat-header">
           <div className="header-info">
             <ChatbotIcon />
-            <h2 className="logo-text">chatbot</h2>
+            <h2 className="logo-text">ISOL | chatbot</h2>
           </div>
-          <button className="material-symbols-outlined">
-            keyboard_arrow_down
+          <button
+            onClick={toggleLanguage}
+            className="material-symbols-outlined"
+          >
+            {language === 'es' ? 'language_spanish' : 'language_us'}
           </button>
         </div>
 
@@ -55,11 +65,7 @@ function App() {
         <div ref={chatBodyRef} className="chat-body">
           <div className="message bot-message">
             <ChatbotIcon />
-            <p className="message-text">
-              Hola 👋 <br />
-              Para válidar tu identidad, por favor, sube una foto de tu INE u
-              otro documento ofial.
-            </p>
+            <p className="message-text">{t.greeting}</p>
           </div>
           {chatHistory.map((chat: IChat, index: number) => (
             <ChatbotMessage

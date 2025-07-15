@@ -1,0 +1,8 @@
+{
+  "greeting": "Para válidar tu identidad, por favor, sube una foto de tu INE",
+  "processing": "Estoy procesando tu archivo, te avisaré cuando termine",
+  "selected": "Seleccionado: ",
+  "input": {
+    "placehonder": "<b>Haz click aquí</b> o arrastra el archivo."
+  }
+}
