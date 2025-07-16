@@ -1,10 +1,10 @@
-### **Pull Request Title**  
+## 🔀 **Pull Request Title**  
 
-### 📌 **Description**
+## 📌 **Description**
 
 <!-- Explain the changes in this PR -->
 
-### **Key Changes**  
+## ✨ **Key Changes**  
 1. **New Files:**  
    -  <!--`.env.example`: Environment variables template >
 
@@ -16,18 +16,16 @@
     axios "^11.10.0"
    ``` -->
 
-### **File Structure Changes**  
+## 🗂️ **File Structure Changes**  
 <!-- ```diff
 src/
 + .env.example
 ``` -->
 
-### 🧪 **Testing Instructions**
+## 🧪 **Testing Instructions**
 1. **Prerequisites:**  
-   -  
 
-2. **Test Cases:**  
-   - 
+2. **Test Cases:** 
 
 ## 📝 Additional Notes
 
