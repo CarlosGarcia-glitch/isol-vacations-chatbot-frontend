@@ -35,14 +35,14 @@ const Login = (props: Props) => {
     <div className={Styles.page__layout}>
       <div className={Styles.page__content}>
         <div className={Styles.login__card}>
-          <div className={Styles.login_card_img}>
+          <div className={Styles.login__card_img}>
             {/* <img src={Logo} alt="" /> */}
           </div>
-          <div className={Styles.login_card_body}>
-            <div style={{ textAlign: 'center' }}>
-              <h3>Bienvenido a Alpha Wolves</h3>
+          <div className={Styles.login__card_body}>
+            <div className={Styles.login__card_title}>
+              <h3>{t.login.labels.title}</h3>
             </div>
-            <InputLabel htmlFor="email">Email</InputLabel>
+            <InputLabel htmlFor="email">{t.login.labels.email}</InputLabel>
             <TextField
               id="email"
               name="email"
@@ -54,7 +54,7 @@ const Login = (props: Props) => {
               onChange={handleChange}
               onKeyDown={e => e.key === 'Enter' && handleSubmit()}
             />
-            <InputLabel htmlFor="password">Contraseña</InputLabel>
+            <InputLabel htmlFor="password">{t.login.labels.password}</InputLabel>
             <TextField
               id="password"
               name="password"
@@ -83,14 +83,14 @@ const Login = (props: Props) => {
               }}
             />
           </div>
-          <div className={Styles.login_card_footer}>
+          <div className={Styles.login__card_footer}>
             <Button
               disabled={loading}
               variant="contained"
-              color="primary"
+              color="secondary"
               startIcon={loading ? <CircularProgress size="1.5rem" style={{ color: '#C0C0C0' }} /> : undefined}
               onClick={() => handleSubmit()}>
-              {loading ? 'Iniciando' : 'Iniciar Sesión'}
+              {loading ? t.login.labels.signingIn : t.login.labels.signIn}
             </Button>
           </div>
         </div>
