@@ -1,6 +1,14 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FormikValues, useFormik } from 'formik';
-import { Button, CircularProgress, IconButton, InputAdornment, InputLabel, TextField } from '@mui/material';
+import {
+  Button,
+  CircularProgress,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  TextField,
+} from '@mui/material';
 import { VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material';
 
 import Footer from '@/components/Footer/Footer';
@@ -9,27 +17,33 @@ import { getLoginFormSchema } from '@/utils/schemas/loginFormSchema';
 import Styles from './_Login.module.scss';
 import { useTranslations } from '@/contexts/AppContext';
 
+import { AuthService } from '@/services/firebase';
+
 type Props = {};
 
 const Login = (props: Props) => {
-  const t = useTranslations()
-  const [loading, setLoading] = useState<boolean>()
-  const [showPassword, setShowPassword] = useState<boolean>()
+  const t = useTranslations();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>();
+  const [showPassword, setShowPassword] = useState<boolean>();
 
-  const schema = getLoginFormSchema(t)
+  const schema = getLoginFormSchema(t);
 
-  const { errors, touched, values, handleBlur, handleChange, handleSubmit } = useFormik({
-    initialValues: { email: '', password: '' },
-    enableReinitialize: true,
-    validationSchema: schema,
-    onSubmit: async (vals: FormikValues) => {
-      try {
-        
-      } catch (error) {
-        console.error(error)
-      }
-    }
-  })
+  const { errors, touched, values, handleBlur, handleChange, handleSubmit } =
+    useFormik({
+      initialValues: { email: '', password: '' },
+      enableReinitialize: true,
+      validationSchema: schema,
+      onSubmit: async (vals: FormikValues) => {
+        try {
+          setLoading(true);
+          await AuthService.login(vals.email, vals.password);
+          navigate('/chat');
+        } catch (error) {
+          console.error(error);
+        }
+      },
+    });
 
   return (
     <div className={Styles.page__layout}>
@@ -49,12 +63,18 @@ const Login = (props: Props) => {
               placeholder="example@isol.com"
               value={values.email}
               error={touched?.email && Boolean(errors.email)}
-              helperText={touched.email && typeof errors.email === 'string' ? errors.email : undefined}
+              helperText={
+                touched.email && typeof errors.email === 'string'
+                  ? errors.email
+                  : undefined
+              }
               onBlur={handleBlur}
               onChange={handleChange}
-              onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+              onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
             />
-            <InputLabel htmlFor="password">{t.login.labels.password}</InputLabel>
+            <InputLabel htmlFor="password">
+              {t.login.labels.password}
+            </InputLabel>
             <TextField
               id="password"
               name="password"
@@ -62,10 +82,14 @@ const Login = (props: Props) => {
               type={showPassword ? 'text' : 'password'}
               value={values.password}
               error={touched?.password && Boolean(errors.password)}
-              helperText={touched.password && typeof errors.password === 'string' ? errors.password : undefined}
+              helperText={
+                touched.password && typeof errors.password === 'string'
+                  ? errors.password
+                  : undefined
+              }
               onBlur={handleBlur}
               onChange={handleChange}
-              onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+              onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
               slotProps={{
                 input: {
                   endAdornment: (
@@ -73,13 +97,18 @@ const Login = (props: Props) => {
                       <IconButton
                         aria-label="toggle password visibility"
                         onClick={() => setShowPassword(!showPassword)}
-                        onMouseDown={e => e.preventDefault()}
-                        edge="end">
-                        {showPassword ? <VisibilityOffOutlined /> : <VisibilityOutlined />}
+                        onMouseDown={(e) => e.preventDefault()}
+                        edge="end"
+                      >
+                        {showPassword ? (
+                          <VisibilityOffOutlined />
+                        ) : (
+                          <VisibilityOutlined />
+                        )}
                       </IconButton>
                     </InputAdornment>
-                  )
-                }
+                  ),
+                },
               }}
             />
           </div>
@@ -88,8 +117,16 @@ const Login = (props: Props) => {
               disabled={loading}
               variant="contained"
               color="secondary"
-              startIcon={loading ? <CircularProgress size="1.5rem" style={{ color: '#C0C0C0' }} /> : undefined}
-              onClick={() => handleSubmit()}>
+              startIcon={
+                loading ? (
+                  <CircularProgress
+                    size="1.5rem"
+                    style={{ color: '#C0C0C0' }}
+                  />
+                ) : undefined
+              }
+              onClick={() => handleSubmit()}
+            >
               {loading ? t.login.labels.signingIn : t.login.labels.signIn}
             </Button>
           </div>

@@ -5,7 +5,6 @@ import {
   UserCredential,
 } from 'firebase/auth';
 
-// Configuración de Firebase (usa variables de entorno)
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -15,13 +14,11 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// Inicializa Firebase
 const app = initializeApp(firebaseConfig);
 
-// Obtiene la instancia de autenticación
+//Auth service
 export const auth = getAuth(app);
 
-// Servicio de autenticación
 export const AuthService = {
   login: async (email: string, password: string): Promise<UserCredential> => {
     return await signInWithEmailAndPassword(auth, email, password);
