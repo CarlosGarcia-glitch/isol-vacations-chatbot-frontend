@@ -15,7 +15,7 @@ import Footer from '@/components/Footer/Footer';
 import { getLoginFormSchema } from '@/utils/schemas/loginFormSchema';
 
 import Styles from './_Login.module.scss';
-import { useTranslations } from '@/contexts/AppContext';
+import { useAlert, useTranslations } from '@/contexts/AppContext';
 
 import { AuthService } from '@/services/firebase';
 
@@ -24,6 +24,8 @@ type Props = {};
 const Login = (props: Props) => {
   const t = useTranslations();
   const navigate = useNavigate();
+  const { setAlert } = useAlert()
+
   const [loading, setLoading] = useState<boolean>();
   const [showPassword, setShowPassword] = useState<boolean>();
 
@@ -35,12 +37,15 @@ const Login = (props: Props) => {
       enableReinitialize: true,
       validationSchema: schema,
       onSubmit: async (vals: FormikValues) => {
+        setLoading(true);
         try {
-          setLoading(true);
           await AuthService.login(vals.email, vals.password);
+          setAlert(true, 'error', t.login.alerts.success.login)
           navigate('/chat');
         } catch (error) {
           console.error(error);
+          setAlert(true, 'error', t.login.alerts.error.login)
+          setLoading(false);
         }
       },
     });

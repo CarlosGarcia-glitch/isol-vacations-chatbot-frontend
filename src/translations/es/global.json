@@ -7,6 +7,14 @@
   },
   "footer": "© 2025 by ISOL. All rights reserved",
   "login": {
+    "alerts": {
+      "error": {
+        "login": "Email o contraseña incorrectos, inténtalo de nuevo"
+      },
+      "success": {
+        "login": "Usuario loggeado con éxito, redirigiendo..."
+      }
+    },
     "labels": {
       "title": "Bienvenidos a ISOL",
       "email": "Email",

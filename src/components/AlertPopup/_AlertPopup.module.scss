@@ -1,0 +1,9 @@
+.alert_popup {
+   box-shadow: 0px 5px 11px 0px rgba(86, 86, 86, 0.35);
+   max-width: 20rem;
+   border-radius: 1.5rem;
+
+   &_content {
+      border-radius: 1.5rem !important;
+   }
+}
