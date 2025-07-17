@@ -58,7 +58,7 @@ const Chat = (props: Props) => {
             <ChatbotIcon />
             <h2 className="logo-text">ISOL | chatbot</h2>
           </div>
-          <div>
+          <div className="buttons-header">
             <div>
               {' '}
               <button
