@@ -1,14 +1,20 @@
-import { HashRouter, Routes, Route } from 'react-router-dom';
-import Chat from '../pages/Chat';
-import Login from '../pages/Login/Login';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ProtectedRoute } from './ProtectedRoute ';
+import Login from '@/pages/Login/Login';
+import Chat from '@/pages/Chat';
 
 export const RouterProvider = () => {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/chat" element={<Chat />} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/chatbot-isol-frontend/chat" element={<Chat />} />
+        </Route>
+
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
   );
 };

@@ -24,7 +24,7 @@ type Props = {};
 const Login = (props: Props) => {
   const t = useTranslations();
   const navigate = useNavigate();
-  const { setAlert } = useAlert()
+  const { setAlert } = useAlert();
 
   const [loading, setLoading] = useState<boolean>();
   const [showPassword, setShowPassword] = useState<boolean>();
@@ -40,11 +40,11 @@ const Login = (props: Props) => {
         setLoading(true);
         try {
           await AuthService.login(vals.email, vals.password);
-          setAlert(true, 'error', t.login.alerts.success.login)
-          navigate('/chat');
+          setAlert(true, 'error', t.login.alerts.success.login);
+          navigate('/chatbot-isol-frontend/chat');
         } catch (error) {
           console.error(error);
-          setAlert(true, 'error', t.login.alerts.error.login)
+          setAlert(true, 'error', t.login.alerts.error.login);
           setLoading(false);
         }
       },
