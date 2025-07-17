@@ -78,7 +78,7 @@ const Login = (props: Props) => {
             <TextField
               id="password"
               name="password"
-              placeholder=""
+              placeholder={t.login.labels.password}
               type={showPassword ? 'text' : 'password'}
               value={values.password}
               error={touched?.password && Boolean(errors.password)}
