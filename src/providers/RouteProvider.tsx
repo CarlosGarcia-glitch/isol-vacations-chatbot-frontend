@@ -10,7 +10,7 @@ export const RouterProvider = () => {
         <Route path="/" element={<Login />} />
 
         <Route element={<ProtectedRoute />}>
-          <Route path="/chatbot-isol-frontend/chat" element={<Chat />} />
+          <Route path="/chat" element={<Chat />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

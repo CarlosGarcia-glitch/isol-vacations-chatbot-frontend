@@ -60,7 +60,6 @@ const Chat = (props: Props) => {
           </div>
           <div className="buttons-header">
             <div>
-              {' '}
               <button
                 onClick={toggleLanguage}
                 className="material-symbols-outlined"
@@ -69,7 +68,6 @@ const Chat = (props: Props) => {
               </button>
             </div>
             <div>
-              {' '}
               <button
                 onClick={() => AuthService.logout()}
                 className="material-symbols-outlined"

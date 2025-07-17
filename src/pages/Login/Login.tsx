@@ -41,7 +41,7 @@ const Login = (props: Props) => {
         try {
           await AuthService.login(vals.email, vals.password);
           setAlert(true, 'error', t.login.alerts.success.login);
-          navigate('/chatbot-isol-frontend/chat');
+          navigate('/chat');
         } catch (error) {
           console.error(error);
           setAlert(true, 'error', t.login.alerts.error.login);
