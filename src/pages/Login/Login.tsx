@@ -45,7 +45,7 @@ const Login = (props: Props) => {
         } catch (error) {
           console.error(error);
           setAlert(true, 'error', t.login.alerts.error.login)
-          setLoading(true);
+          setLoading(false);
         }
       },
     });
