@@ -1,9 +1,17 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  Dispatch,
+  SetStateAction,
+} from 'react';
 import en from '../translations/en/global.json';
 import es from '../translations/es/global.json';
 import AlertPopup from '@/components/AlertPopup/AlertPopup';
 import { AlertColor } from '@mui/material';
 
+import { IChat } from '@/components/ChatbotMessage';
 
 // Define interface for Alert state
 interface AlertState {
@@ -21,6 +29,8 @@ interface AppContextType {
   setLanguage: (lang: string) => void;
   alert: AlertState;
   setAlert: (value : AlertState) => void;
+  chatHistory: IChat[];
+  setChatHistory: Dispatch<SetStateAction<IChat[]>>;
 }
 
 
@@ -29,6 +39,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [isAuth, setIsAuth] = useState<boolean>(false);
   const [language, setLanguage] = useState<string>('es');
+  const [chatHistory, setChatHistory] = useState<IChat[]>([]);
   const [alert, setAlert] = useState<AlertState>({
     open: false,
     severity: 'success',
@@ -37,7 +48,18 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   })
 
   return (
-    <AppContext.Provider value={{ isAuth, setIsAuth, language, setLanguage, alert, setAlert }}>
+    <AppContext.Provider
+      value={{
+        isAuth,
+        setIsAuth,
+        language,
+        setLanguage,
+        alert,
+        setAlert,
+        chatHistory,
+        setChatHistory,
+      }}
+    >
       {children}
       <AlertPopup {...alert} handleClose={() => setAlert(prevState => ({ ...prevState, open: false }))} />
     </AppContext.Provider>
