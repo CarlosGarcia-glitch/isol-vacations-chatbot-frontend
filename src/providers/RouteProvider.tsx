@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute } from './ProtectedRoute ';
 import Login from '@/pages/Login/Login';
-import Chat from '@/pages/Chat';
+import Chat from '@/pages/Chat/Chat';
 
 export const RouterProvider = () => {
   return (

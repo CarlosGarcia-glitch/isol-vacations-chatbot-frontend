@@ -1,49 +1,81 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { useTranslations } from '../contexts/AppContext';
+import { useAppContext, useTranslations } from '../contexts/AppContext';
 
-const ChatbotForm = ({
-  handleOnChange,
-  handleOnSubmit,
-  file,
-}: {
-  file: string;
-  handleOnChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleOnSubmit: () => void;
-}) => {
+const ChatbotForm = () => {
   const t = useTranslations();
+  const { setChatHistory, language } = useAppContext();
+  const [inputValue, setInputValue] = useState<string>('');
+  const [file, setFile] = useState<File | null>(null);
+  const [placeholder, setPlaceholder] = useState<string>('');
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    handleOnSubmit();
+    const message = file?.name ?? inputValue;
+    setChatHistory((history) => [...history, { role: 'user', message }]);
+    // api call
+    setFile(null);
+    setInputValue('');
   };
+
+  const handleOnSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setFile(file);
+    setInputValue('');
+  };
+
+  const clearInput = () => {
+    setFile(null);
+    setInputValue('');
+  };
+
+  useEffect(() => {
+    const text = file ? `${t.selected}${file.name}` : t.input.placeholder
+    setPlaceholder(text);
+  }, [language, file]);
 
   return (
     <form onSubmit={onSubmit} className="chat-form">
-      <label className="selected-file">
-        <input
-          id="document"
-          type="file"
-          name="document"
-          accept="image/png,image/jpeg,image/jpg,image/webp,application/pdf"
-          required
-          style={{ display: 'none' }}
-          onChange={handleOnChange}
-        />
-        <p className="file-name">
-          {file ? (
-            <>
-              {t.selected} <b>{file}</b>
-            </>
-          ) : (
-            <>
-              <span className="material-symbols-outlined">cloud_upload</span>
-              <span dangerouslySetInnerHTML={{ __html: t.input.placehonder }} />
-            </>
-          )}
-        </p>
-        {file && <button className="material-symbols-outlined">upload</button>}
-      </label>
+      <input
+        id="file"
+        type="text"
+        placeholder={placeholder}
+        disabled={!!file}
+        className="message-input"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          setInputValue(e.target.value);
+        }}
+        value={inputValue}
+      />
+
+      {inputValue || file ? (
+        <div className="buttons">
+          <button
+            type="button"
+            className="material-symbols-outlined button clear"
+            onClick={clearInput}
+          >
+            close_small
+          </button>
+          <button type="submit" className="material-symbols-outlined button">
+            send
+          </button>
+        </div>
+      ) : (
+        <label className="button">
+          <input
+            id="document"
+            type="file"
+            name="document"
+            accept="image/png,image/jpeg,image/jpg,image/webp,application/pdf"
+            required
+            style={{ display: 'none' }}
+            onChange={handleOnSelectFile}
+          />
+          <span className="material-symbols-outlined">attach_file</span>
+        </label>
+      )}
     </form>
   );
 };

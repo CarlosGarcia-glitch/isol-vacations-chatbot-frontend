@@ -1,9 +1,9 @@
 {
   "greeting": "In order to validate your identity, please, upload an ID picture",
   "processing": "I am processing your file, I'll let you know once I'm done.",
-  "selected": "Seleccionado: ",
+  "selected": "Selected: ",
   "input": {
-    "placehonder": "<b>Click to upload</b> or drag and drop here."
+    "placeholder": "Message..."
   },
   "footer": "© 2025 by ISOL. All rights reserved",
   "login": {

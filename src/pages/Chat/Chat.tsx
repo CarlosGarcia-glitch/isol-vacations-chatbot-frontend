@@ -1,21 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
-import { useAppContext, useTranslations } from '../contexts/AppContext';
+import { useEffect, useRef } from 'react';
+import { useAppContext, useTranslations } from '../../contexts/AppContext';
 
 //Components
-import ChatbotForm from '../components/ChatbotForm';
-import ChatbotMessage, { IChat } from '../components/ChatbotMessage';
-import ChatbotIcon from '../components/icons/ChatbotIcon';
+import ChatbotForm from '../../components/ChatbotForm';
+import ChatbotMessage, { IChat } from '../../components/ChatbotMessage';
+import ChatbotIcon from '../../components/icons/ChatbotIcon';
 import { AuthService } from '@/services/firebase';
 import { LoginOutlined } from '@mui/icons-material';
+import './Chat.scss';
 
-type Props = {};
-
-const Chat = (props: Props) => {
+const Chat = () => {
   const t = useTranslations();
-  const { language, setLanguage } = useAppContext();
-
-  const [file, setFile] = useState<string>('');
-  const [chatHistory, setChatHistory] = useState<IChat[]>([]);
+  const { language, setLanguage, chatHistory } = useAppContext();
   const chatBodyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -25,24 +21,6 @@ const Chat = (props: Props) => {
       behavior: 'smooth',
     });
   }, [chatHistory]);
-
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setFile(file.name);
-  };
-
-  const handleOnSubmit = () => {
-    setChatHistory((history) => [
-      ...history,
-      { role: 'user', message: file },
-      {
-        role: 'bot',
-        message: 'processing',
-      },
-    ]);
-    setFile('');
-  };
 
   const toggleLanguage = () => {
     const newLang = language === 'en' ? 'es' : 'en';
@@ -95,11 +73,7 @@ const Chat = (props: Props) => {
 
         {/*  Chatbot Footer */}
         <div className="chat-footer">
-          <ChatbotForm
-            handleOnChange={handleOnChange}
-            handleOnSubmit={handleOnSubmit}
-            file={file}
-          />
+          <ChatbotForm />
         </div>
       </div>
     </div>
