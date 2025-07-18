@@ -3,7 +3,7 @@
   "processing": "Estoy procesando tu archivo, te avisaré cuando termine",
   "selected": "Seleccionado: ",
   "input": {
-    "placehonder": "<b>Haz click aquí</b> o arrastra el archivo."
+    "placeholder": "Mensaje..."
   },
   "footer": "© 2025 by ISOL. All rights reserved",
   "login": {
