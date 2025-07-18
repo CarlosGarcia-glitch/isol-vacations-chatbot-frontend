@@ -54,6 +54,10 @@ body {
     justify-content: space-between;
     background: $primary-color;
 
+    .buttons-header {
+      display: flex;
+    }
+
     .header-info {
       display: flex;
       gap: 8px;

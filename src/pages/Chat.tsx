@@ -5,6 +5,8 @@ import { useAppContext, useTranslations } from '../contexts/AppContext';
 import ChatbotForm from '../components/ChatbotForm';
 import ChatbotMessage, { IChat } from '../components/ChatbotMessage';
 import ChatbotIcon from '../components/icons/ChatbotIcon';
+import { AuthService } from '@/services/firebase';
+import { LoginOutlined } from '@mui/icons-material';
 
 type Props = {};
 
@@ -56,12 +58,24 @@ const Chat = (props: Props) => {
             <ChatbotIcon />
             <h2 className="logo-text">ISOL | chatbot</h2>
           </div>
-          <button
-            onClick={toggleLanguage}
-            className="material-symbols-outlined"
-          >
-            {language === 'es' ? 'language_spanish' : 'language_us'}
-          </button>
+          <div className="buttons-header">
+            <div>
+              <button
+                onClick={toggleLanguage}
+                className="material-symbols-outlined"
+              >
+                {language === 'es' ? 'language_spanish' : 'language_us'}
+              </button>
+            </div>
+            <div>
+              <button
+                onClick={() => AuthService.logout()}
+                className="material-symbols-outlined"
+              >
+                <LoginOutlined sx={{ height: 38 }} />
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Chatbot Body */}
