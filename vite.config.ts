@@ -22,4 +22,5 @@ export default defineConfig({
       usePolling: true,
     },
   },
+  base: '/chatbot-isol-frontend/'
 });
