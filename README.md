@@ -52,13 +52,27 @@ docker run -p 5173:5173 isol-chatbot-frontend
 docker-compose up --build
 ```
 
+## Testing
+
+### Running Tests
+```bash
+npm run test
+```
+
+### Running Tests coverage
+```bash
+npm run test:ci
+npx serve coverage
+```
+
+Visit [http://localhost:3000](http://localhost:3000)
+
 ## Project Structure
 
 ```
 ├── public/
 │   └── logo.jpg                # App logo
 ├── src/
-│   ├── App.tsx                 # Main app component
 │   ├── main.tsx                # App entry, context provider
 │   ├── index.scss              # Global styles (SCSS)
 │   ├── components/
