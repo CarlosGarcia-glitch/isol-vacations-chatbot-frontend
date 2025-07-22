@@ -67,6 +67,11 @@ npx serve coverage
 
 Visit [http://localhost:3000](http://localhost:3000)
 
+### Running cypress tests
+```bash
+npm run cy:e2e
+```
+
 ## Project Structure
 
 ```
@@ -85,6 +90,9 @@ Visit [http://localhost:3000](http://localhost:3000)
 │   └── translations/
 │       ├── en/global.json      # English translations
 │       └── es/global.json      # Spanish translations
+├── cypress/
+│   └── e2e/
+│       └── spec.cy.ts          # e2e tests
 ├── Dockerfile                  # Docker support
 ├── docker-compose.yml          # Docker Compose support
 ├── vite.config.ts              # Vite config
