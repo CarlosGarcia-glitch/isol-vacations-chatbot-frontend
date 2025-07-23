@@ -52,13 +52,32 @@ docker run -p 5173:5173 isol-chatbot-frontend
 docker-compose up --build
 ```
 
+## Testing
+
+### Running Tests
+```bash
+npm run test
+```
+
+### Running Tests coverage
+```bash
+npm run test:ci
+npx serve coverage
+```
+
+Visit [http://localhost:3000](http://localhost:3000)
+
+### Running cypress tests
+```bash
+npm run cy:e2e
+```
+
 ## Project Structure
 
 ```
 ├── public/
 │   └── logo.jpg                # App logo
 ├── src/
-│   ├── App.tsx                 # Main app component
 │   ├── main.tsx                # App entry, context provider
 │   ├── index.scss              # Global styles (SCSS)
 │   ├── components/
@@ -71,6 +90,9 @@ docker-compose up --build
 │   └── translations/
 │       ├── en/global.json      # English translations
 │       └── es/global.json      # Spanish translations
+├── cypress/
+│   └── e2e/
+│       └── spec.cy.ts          # e2e tests
 ├── Dockerfile                  # Docker support
 ├── docker-compose.yml          # Docker Compose support
 ├── vite.config.ts              # Vite config

@@ -81,6 +81,7 @@ const Login = (props: Props) => {
               {t.login.labels.password}
             </InputLabel>
             <TextField
+              data-testid="password-input"
               id="password"
               name="password"
               placeholder={t.login.labels.password}
