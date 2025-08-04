@@ -65,7 +65,7 @@ npm run test:ci
 npx serve coverage
 ```
 
-Visit [http://localhost:3000](http://localhost:3000)
+Visit [http://localhost:5173](http://localhost:5173)
 
 ### Running cypress tests
 ```bash

@@ -9,11 +9,34 @@ const ChatbotForm = () => {
   const [file, setFile] = useState<File | null>(null);
   const [placeholder, setPlaceholder] = useState<string>('');
 
+  const askAgent = () => {
+    const message = inputValue.trim() !== '' ? `&message=${inputValue}` : '';
+    const formData = new FormData();
+    if (file) {
+      formData.append('document', file, file.name);
+    }
+    fetch(
+      `https://agent-demo-785177279845.us-central1.run.app/api/v1/chat/message?conversationId=chat_31dac0ee${message}`,
+      {
+        method: 'POST',
+        body: formData,
+      },
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setChatHistory((history) => [...history, { role: 'bot', message: data.message }]);
+      })
+      .catch((error) => {
+        console.error('Error fetching chat history:', error);
+      });
+  };
+
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const message = file?.name ?? inputValue;
     setChatHistory((history) => [...history, { role: 'user', message }]);
     // api call
+    askAgent();
     setFile(null);
     setInputValue('');
   };
@@ -31,7 +54,7 @@ const ChatbotForm = () => {
   };
 
   useEffect(() => {
-    const text = file ? `${t.selected}${file.name}` : t.input.placeholder
+    const text = file ? `${t.selected}${file.name}` : t.input.placeholder;
     setPlaceholder(text);
   }, [language, file]);
 

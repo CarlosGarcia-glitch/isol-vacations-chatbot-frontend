@@ -4,7 +4,7 @@ import { useTranslations } from '../contexts/AppContext';
 import ChatbotIcon from './icons/ChatbotIcon';
 
 export interface IChat {
-  role: string;
+  role: 'bot' | 'user';
   message: string;
 }
 

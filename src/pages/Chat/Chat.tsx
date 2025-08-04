@@ -11,8 +11,85 @@ import './Chat.scss';
 
 const Chat = () => {
   const t = useTranslations();
-  const { language, setLanguage, chatHistory } = useAppContext();
+  const { language, setLanguage, chatHistory, setChatHistory } =
+    useAppContext();
   const chatBodyRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function startChat() {
+      fetch(
+        'https://agent-demo-785177279845.us-central1.run.app/api/v1/chat/start',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({}),
+        },
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          const message = data.message;
+          setChatHistory([...chatHistory, { role: 'bot', message }]);
+        })
+        .catch((error) => {
+          console.error('Error fetching chat history:', error);
+        });
+    }
+
+    function existsChat() {
+      fetch(
+        'https://agent-demo-785177279845.us-central1.run.app/api/v1/chat/exists?conversationId=chat_31dac0ee',
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          if (data === true) {
+            getChatHistory();
+          } else {
+            startChat();
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching chat history:', error);
+        });
+    }
+
+    function getChatHistory() {
+      fetch(
+        'https://agent-demo-785177279845.us-central1.run.app/api/v1/chat/history?conversationId=chat_31dac0ee',
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          const { messageHistory } = data;
+          const messages = messageHistory
+            .map((message: { role: 'USER' | 'ASSISTANT'; content: string }) => {
+              return {
+                role: message.role === 'USER' ? 'user' : 'bot',
+                message: message.content,
+              };
+            })
+            .slice(1);
+          setChatHistory([...chatHistory, ...messages]);
+        })
+        .catch((error) => {
+          console.error('Error fetching chat history:', error);
+        });
+    }
+    existsChat();
+  }, []);
 
   useEffect(() => {
     // smooth auto scroll
@@ -58,10 +135,10 @@ const Chat = () => {
 
         {/* Chatbot Body */}
         <div ref={chatBodyRef} className="chat-body">
-          <div className="message bot-message">
+          {/* <div className="message bot-message">
             <ChatbotIcon />
             <p className="message-text">{t.greeting}</p>
-          </div>
+          </div> */}
           {chatHistory.map((chat: IChat, index: number) => (
             <ChatbotMessage
               key={index}
