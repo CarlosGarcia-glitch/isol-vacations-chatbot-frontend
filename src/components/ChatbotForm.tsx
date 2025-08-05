@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAppContext, useTranslations } from '../contexts/AppContext';
-import { chatService } from '@/services/chatService'; // ✅ nuevo import
+import { chatService } from '@/services/chatService';
 
 const ChatbotForm = () => {
   const t = useTranslations();
@@ -20,7 +20,7 @@ const ChatbotForm = () => {
 
     try {
       const botResponse = await chatService.sendMessageToAgent(
-        inputValue,
+        userMessage,
         file,
       );
       setChatHistory((history) => [

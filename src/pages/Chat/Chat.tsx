@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAppContext, useTranslations } from '../../contexts/AppContext';
 
 import ChatbotForm from '../../components/ChatbotForm';
@@ -6,29 +6,44 @@ import ChatbotMessage, { IChat } from '../../components/ChatbotMessage';
 import ChatbotIcon from '../../components/icons/ChatbotIcon';
 import { AuthService } from '@/services/firebase';
 import { LoginOutlined } from '@mui/icons-material';
+import { CircularProgress } from '@mui/material';
 import { chatService } from '@/services/chatService';
 import './Chat.scss';
 
 const Chat = () => {
   const t = useTranslations();
+  const [loading, setLoading] = useState(true);
   const { language, setLanguage, chatHistory, setChatHistory } =
     useAppContext();
   const chatBodyRef = useRef<HTMLDivElement>(null);
+  const hasInitializedRef = useRef(false);
 
   useEffect(() => {
+    if (hasInitializedRef.current) return;
+    hasInitializedRef.current = true;
+
     const initChat = async () => {
       try {
-        const exists = await chatService.existsChat();
+        const conversationId = localStorage.getItem('conversationId');
 
-        if (exists) {
-          const history = await chatService.getChatHistory();
-          setChatHistory((prev) => [...prev, ...history]);
-        } else {
-          const message = await chatService.startChat();
-          setChatHistory((prev) => [...prev, { role: 'bot', message }]);
+        if (conversationId) {
+          const exists = await chatService.existsChat();
+          if (exists) {
+            const history = await chatService.getChatHistory();
+            setChatHistory(history);
+            setLoading(false);
+            return;
+          } else {
+            localStorage.removeItem('conversationId');
+          }
         }
+
+        const message = await chatService.startChat();
+        setChatHistory([{ role: 'bot', message }]);
       } catch (error) {
         console.error('Error initializing chat:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -47,7 +62,7 @@ const Chat = () => {
     setLanguage(newLang);
   };
 
-  const lastBotIndex = chatHistory?.map(m => m.role).lastIndexOf('bot');
+  const lastBotIndex = chatHistory?.map((m) => m.role).lastIndexOf('bot');
 
   return (
     <div className="container">
@@ -69,7 +84,9 @@ const Chat = () => {
             </div>
             <div>
               <button
-                onClick={() => AuthService.logout()}
+                onClick={() => {
+                  AuthService.logout();
+                }}
                 className="material-symbols-outlined"
               >
                 <LoginOutlined sx={{ height: 38 }} />
@@ -79,15 +96,21 @@ const Chat = () => {
         </div>
 
         {/* Chatbot Body */}
-        <div ref={chatBodyRef} className="chat-body">
-          {chatHistory.map((chat: IChat, index: number) => (
-            <ChatbotMessage
-              key={index}
-              role={chat.role}
-              message={chat.message}
-              isLastMsg={chat.role === 'bot' && index === lastBotIndex}
-            />
-          ))}
+        <div className="chat-body" ref={chatBodyRef}>
+          {loading ? (
+            <div className="chat-loading">
+              <CircularProgress />
+            </div>
+          ) : (
+            chatHistory.map((chat: IChat, index: number) => (
+              <ChatbotMessage
+                key={index}
+                role={chat.role}
+                message={chat.message}
+                isLastMsg={chat.role === 'bot' && index === lastBotIndex}
+              />
+            ))
+          )}
         </div>
 
         {/* Chatbot Footer */}

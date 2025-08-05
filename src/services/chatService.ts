@@ -1,10 +1,15 @@
 // services/chatService.ts
 import api from './axiosInstance';
 
-export const conversationId = 'chat_31dac0ee';
+const getConversationId = (): string | null => {
+  return localStorage.getItem('conversationId');
+};
 
 export const chatService = {
   async existsChat() {
+    const conversationId = getConversationId();
+    if (!conversationId) return false;
+
     const response = await api.get<boolean>('/chat/exists', {
       params: { conversationId },
     });
@@ -13,10 +18,17 @@ export const chatService = {
 
   async startChat() {
     const response = await api.post('/chat/start', {});
-    return response.data.message as string;
+    const { conversationId, message } = response.data;
+
+    localStorage.setItem('conversationId', conversationId);
+
+    return message as string;
   },
 
   async getChatHistory() {
+    const conversationId = getConversationId();
+    if (!conversationId) return [];
+
     const response = await api.get('/chat/history', {
       params: { conversationId },
     });
@@ -34,24 +46,24 @@ export const chatService = {
   },
 
   async sendMessageToAgent(inputMessage: string, file: File | null) {
+    const conversationId = getConversationId();
+    if (!conversationId) throw new Error('No conversation ID found.');
+
     const formData = new FormData();
+
     if (file) {
-      formData.append('document', file, file.name);
+      formData.append('documents', file, file.name);
     }
 
-    const params = new URLSearchParams({
-      conversationId,
-    });
-
+    const params = new URLSearchParams({ conversationId });
     if (inputMessage.trim()) {
       params.append('message', inputMessage);
     }
 
-    const response = await api.post(`/chat/message?${params}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await api.post(
+      `/chat/message?${params.toString()}`,
+      formData,
+    );
 
     return response.data.message as string;
   },
