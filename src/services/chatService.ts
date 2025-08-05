@@ -50,8 +50,10 @@ export const chatService = {
     if (!conversationId) throw new Error('No conversation ID found.');
 
     const formData = new FormData();
+
     if (file) {
-      formData.append('document', file, file.name);
+      formData.append('documents', file, file.name);
+      console.log('FormData contenido:', Array.from(formData.entries())[0]);
     }
 
     const params = new URLSearchParams({ conversationId });
@@ -62,11 +64,6 @@ export const chatService = {
     const response = await api.post(
       `/chat/message?${params.toString()}`,
       formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      },
     );
 
     return response.data.message as string;

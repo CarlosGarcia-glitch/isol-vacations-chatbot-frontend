@@ -19,8 +19,6 @@ const ChatbotForm = () => {
     ]);
 
     try {
-      console.log(inputValue);
-      console.log(file);
       const botResponse = await chatService.sendMessageToAgent(
         userMessage,
         file,
@@ -40,7 +38,6 @@ const ChatbotForm = () => {
   const handleOnSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
-    console.log(selectedFile);
     setFile(selectedFile);
     setInputValue('');
   };
