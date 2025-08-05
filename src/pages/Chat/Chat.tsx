@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { useAppContext, useTranslations } from '../../contexts/AppContext';
 
-//Components
 import ChatbotForm from '../../components/ChatbotForm';
 import ChatbotMessage, { IChat } from '../../components/ChatbotMessage';
 import ChatbotIcon from '../../components/icons/ChatbotIcon';
 import { AuthService } from '@/services/firebase';
 import { LoginOutlined } from '@mui/icons-material';
+import { chatService } from '@/services/chatService';
 import './Chat.scss';
 
 const Chat = () => {
@@ -16,83 +16,26 @@ const Chat = () => {
   const chatBodyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    function startChat() {
-      fetch(
-        'https://agent-demo-785177279845.us-central1.run.app/api/v1/chat/start',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({}),
-        },
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          const message = data.message;
-          setChatHistory([...chatHistory, { role: 'bot', message }]);
-        })
-        .catch((error) => {
-          console.error('Error fetching chat history:', error);
-        });
-    }
+    const initChat = async () => {
+      try {
+        const exists = await chatService.existsChat();
 
-    function existsChat() {
-      fetch(
-        'https://agent-demo-785177279845.us-central1.run.app/api/v1/chat/exists?conversationId=chat_31dac0ee',
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          if (data === true) {
-            getChatHistory();
-          } else {
-            startChat();
-          }
-        })
-        .catch((error) => {
-          console.error('Error fetching chat history:', error);
-        });
-    }
+        if (exists) {
+          const history = await chatService.getChatHistory();
+          setChatHistory((prev) => [...prev, ...history]);
+        } else {
+          const message = await chatService.startChat();
+          setChatHistory((prev) => [...prev, { role: 'bot', message }]);
+        }
+      } catch (error) {
+        console.error('Error initializing chat:', error);
+      }
+    };
 
-    function getChatHistory() {
-      fetch(
-        'https://agent-demo-785177279845.us-central1.run.app/api/v1/chat/history?conversationId=chat_31dac0ee',
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          const { messageHistory } = data;
-          const messages = messageHistory
-            .map((message: { role: 'USER' | 'ASSISTANT'; content: string }) => {
-              return {
-                role: message.role === 'USER' ? 'user' : 'bot',
-                message: message.content,
-              };
-            })
-            .slice(1);
-          setChatHistory([...chatHistory, ...messages]);
-        })
-        .catch((error) => {
-          console.error('Error fetching chat history:', error);
-        });
-    }
-    existsChat();
+    initChat();
   }, []);
 
   useEffect(() => {
-    // smooth auto scroll
     chatBodyRef.current?.scrollTo({
       top: chatBodyRef.current.scrollHeight,
       behavior: 'smooth',
@@ -135,10 +78,6 @@ const Chat = () => {
 
         {/* Chatbot Body */}
         <div ref={chatBodyRef} className="chat-body">
-          {/* <div className="message bot-message">
-            <ChatbotIcon />
-            <p className="message-text">{t.greeting}</p>
-          </div> */}
           {chatHistory.map((chat: IChat, index: number) => (
             <ChatbotMessage
               key={index}
@@ -148,7 +87,7 @@ const Chat = () => {
           ))}
         </div>
 
-        {/*  Chatbot Footer */}
+        {/* Chatbot Footer */}
         <div className="chat-footer">
           <ChatbotForm />
         </div>

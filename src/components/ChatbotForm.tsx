@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-
 import { useAppContext, useTranslations } from '../contexts/AppContext';
+import { chatService } from '@/services/chatService'; // ✅ nuevo import
 
 const ChatbotForm = () => {
   const t = useTranslations();
@@ -9,42 +9,36 @@ const ChatbotForm = () => {
   const [file, setFile] = useState<File | null>(null);
   const [placeholder, setPlaceholder] = useState<string>('');
 
-  const askAgent = () => {
-    const message = inputValue.trim() !== '' ? `&message=${inputValue}` : '';
-    const formData = new FormData();
-    if (file) {
-      formData.append('document', file, file.name);
-    }
-    fetch(
-      `https://agent-demo-785177279845.us-central1.run.app/api/v1/chat/message?conversationId=chat_31dac0ee${message}`,
-      {
-        method: 'POST',
-        body: formData,
-      },
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setChatHistory((history) => [...history, { role: 'bot', message: data.message }]);
-      })
-      .catch((error) => {
-        console.error('Error fetching chat history:', error);
-      });
-  };
-
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const message = file?.name ?? inputValue;
-    setChatHistory((history) => [...history, { role: 'user', message }]);
-    // api call
-    askAgent();
+
+    const userMessage = file?.name ?? inputValue;
+    setChatHistory((history) => [
+      ...history,
+      { role: 'user', message: userMessage },
+    ]);
+
+    try {
+      const botResponse = await chatService.sendMessageToAgent(
+        inputValue,
+        file,
+      );
+      setChatHistory((history) => [
+        ...history,
+        { role: 'bot', message: botResponse },
+      ]);
+    } catch (error) {
+      console.error('Error sending message to agent:', error);
+    }
+
     setFile(null);
     setInputValue('');
   };
 
   const handleOnSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setFile(file);
+    const selectedFile = e.target.files?.[0];
+    if (!selectedFile) return;
+    setFile(selectedFile);
     setInputValue('');
   };
 
