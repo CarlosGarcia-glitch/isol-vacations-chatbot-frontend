@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAppContext, useTranslations } from '../contexts/AppContext';
-import { chatService } from '@/services/chatService'; // ✅ nuevo import
+import { chatService } from '@/services/chatService';
 
 const ChatbotForm = () => {
   const t = useTranslations();
@@ -19,8 +19,10 @@ const ChatbotForm = () => {
     ]);
 
     try {
+      console.log(inputValue);
+      console.log(file);
       const botResponse = await chatService.sendMessageToAgent(
-        inputValue,
+        userMessage,
         file,
       );
       setChatHistory((history) => [
@@ -38,6 +40,7 @@ const ChatbotForm = () => {
   const handleOnSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
+    console.log(selectedFile);
     setFile(selectedFile);
     setInputValue('');
   };

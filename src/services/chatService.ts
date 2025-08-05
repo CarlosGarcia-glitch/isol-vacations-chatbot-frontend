@@ -54,19 +54,20 @@ export const chatService = {
       formData.append('document', file, file.name);
     }
 
-    const params = new URLSearchParams({
-      conversationId,
-    });
-
+    const params = new URLSearchParams({ conversationId });
     if (inputMessage.trim()) {
       params.append('message', inputMessage);
     }
 
-    const response = await api.post(`/chat/message?${params}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+    const response = await api.post(
+      `/chat/message?${params.toString()}`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       },
-    });
+    );
 
     return response.data.message as string;
   },
