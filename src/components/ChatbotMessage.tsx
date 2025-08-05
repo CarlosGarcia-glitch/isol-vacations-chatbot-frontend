@@ -6,9 +6,10 @@ import ChatbotIcon from './icons/ChatbotIcon';
 export interface IChat {
   role: 'bot' | 'user';
   message: string;
+  isLastMsg?: boolean;
 }
 
-const ChatbotMessage = ({ role, message }: IChat) => {
+const ChatbotMessage = ({ role, message, isLastMsg }: IChat) => {
   const t = useTranslations();
 
   const fullText: string = message === 'processing' ? t.processing : message;
@@ -17,7 +18,7 @@ const ChatbotMessage = ({ role, message }: IChat) => {
 
   useEffect(() => {
     function typeWriter() {
-      if (role === 'bot') {
+      if (role === 'bot' && isLastMsg) {
         if (index < fullText.length) {
           if (element?.current) {
             element.current.textContent += fullText.charAt(index);

@@ -47,6 +47,8 @@ const Chat = () => {
     setLanguage(newLang);
   };
 
+  const lastBotIndex = chatHistory?.map(m => m.role).lastIndexOf('bot');
+
   return (
     <div className="container">
       <div className="chatbot-popup">
@@ -83,6 +85,7 @@ const Chat = () => {
               key={index}
               role={chat.role}
               message={chat.message}
+              isLastMsg={chat.role === 'bot' && index === lastBotIndex}
             />
           ))}
         </div>
