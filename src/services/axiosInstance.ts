@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://agent-demo-785177279845.us-central1.run.app/api/v1',
+  baseURL: import.meta.env.VITE_BASE_URL_CHAT,
   headers: {
     'Content-Type': 'application/json',
   },
