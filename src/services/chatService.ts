@@ -53,7 +53,6 @@ export const chatService = {
 
     if (file) {
       formData.append('documents', file, file.name);
-      console.log('FormData contenido:', Array.from(formData.entries())[0]);
     }
 
     const params = new URLSearchParams({ conversationId });
