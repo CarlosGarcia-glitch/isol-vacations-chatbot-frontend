@@ -16,19 +16,30 @@ const Chat = () => {
   const { language, setLanguage, chatHistory, setChatHistory } =
     useAppContext();
   const chatBodyRef = useRef<HTMLDivElement>(null);
+  const hasInitializedRef = useRef(false);
 
   useEffect(() => {
+    if (hasInitializedRef.current) return;
+    hasInitializedRef.current = true;
+
     const initChat = async () => {
       try {
-        const exists = await chatService.existsChat();
+        const conversationId = localStorage.getItem('conversationId');
 
-        if (exists) {
-          const history = await chatService.getChatHistory();
-          setChatHistory((prev) => [...prev, ...history]);
-        } else {
-          const message = await chatService.startChat();
-          setChatHistory((prev) => [...prev, { role: 'bot', message }]);
+        if (conversationId) {
+          const exists = await chatService.existsChat();
+          if (exists) {
+            const history = await chatService.getChatHistory();
+            setChatHistory(history);
+            setLoading(false);
+            return;
+          } else {
+            localStorage.removeItem('conversationId');
+          }
         }
+
+        const message = await chatService.startChat();
+        setChatHistory([{ role: 'bot', message }]);
       } catch (error) {
         console.error('Error initializing chat:', error);
       } finally {
@@ -42,7 +53,7 @@ const Chat = () => {
   useEffect(() => {
     chatBodyRef.current?.scrollTo({
       top: chatBodyRef.current.scrollHeight,
-      behavior: 'auto',
+      behavior: 'smooth',
     });
   }, [chatHistory]);
 
@@ -73,7 +84,9 @@ const Chat = () => {
             </div>
             <div>
               <button
-                onClick={() => AuthService.logout()}
+                onClick={() => {
+                  AuthService.logout();
+                }}
                 className="material-symbols-outlined"
               >
                 <LoginOutlined sx={{ height: 38 }} />
