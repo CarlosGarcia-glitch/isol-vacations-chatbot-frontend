@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { User } from 'firebase/auth';
 import { Navigate, Outlet } from 'react-router-dom';
 import { AuthService } from '../services/firebase';
-import { CircularProgress } from '@mui/material';
+import LoadingPage from '@/components/LoadingPage/LoadingPage';
 
 export const ProtectedRoute = () => {
   const [authState, setAuthState] = useState<{
@@ -19,7 +19,7 @@ export const ProtectedRoute = () => {
   }, []);
 
   if (authState.loading) {
-    return <CircularProgress />;
+    return <LoadingPage />;
   }
 
   return authState.user ? <Outlet /> : <Navigate to="/" replace />;
