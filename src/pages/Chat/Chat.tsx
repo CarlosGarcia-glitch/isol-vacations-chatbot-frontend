@@ -8,11 +8,13 @@ import { AuthService } from '@/services/firebase';
 import { LoginOutlined } from '@mui/icons-material';
 import { CircularProgress } from '@mui/material';
 import { chatService } from '@/services/chatService';
+import ChatbotThinking from '@/components/ChatbotThinking/ChatbotThinking';
 import './Chat.scss';
 
 const Chat = () => {
   const t = useTranslations();
   const [loading, setLoading] = useState(true);
+  const [isThinking, setIsThinking] = useState(false);
   const { language, setLanguage, chatHistory, setChatHistory } =
     useAppContext();
   const chatBodyRef = useRef<HTMLDivElement>(null);
@@ -102,20 +104,23 @@ const Chat = () => {
               <CircularProgress />
             </div>
           ) : (
-            chatHistory.map((chat: IChat, index: number) => (
-              <ChatbotMessage
-                key={index}
-                role={chat.role}
-                message={chat.message}
-                isLastMsg={chat.role === 'bot' && index === lastBotIndex}
-              />
-            ))
+            <>
+              {chatHistory.map((chat: IChat, index: number) => (
+                <ChatbotMessage
+                  key={index}
+                  role={chat.role}
+                  message={chat.message}
+                  isLastMsg={chat.role === 'bot' && index === lastBotIndex}
+                />
+              ))}
+              {isThinking && <ChatbotThinking />}
+            </>
           )}
         </div>
 
         {/* Chatbot Footer */}
         <div className="chat-footer">
-          <ChatbotForm />
+          <ChatbotForm isThinking={isThinking} setIsThinking={setIsThinking} />
         </div>
       </div>
     </div>

@@ -2,7 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useAppContext, useTranslations } from '../contexts/AppContext';
 import { chatService } from '@/services/chatService';
 
-const ChatbotForm = () => {
+type ChatbotFormProps = {
+  isThinking: boolean;
+  setIsThinking: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const ChatbotForm = ({ isThinking, setIsThinking }: ChatbotFormProps) => {
   const t = useTranslations();
   const { setChatHistory, language } = useAppContext();
   const [inputValue, setInputValue] = useState<string>('');
@@ -12,6 +17,7 @@ const ChatbotForm = () => {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    setIsThinking(true);
     const userMessage = file?.name ?? inputValue;
     setChatHistory((history) => [
       ...history,
@@ -29,6 +35,8 @@ const ChatbotForm = () => {
       ]);
     } catch (error) {
       console.error('Error sending message to agent:', error);
+    } finally {
+      setIsThinking(false);
     }
 
     setFile(null);
@@ -58,15 +66,15 @@ const ChatbotForm = () => {
         id="file"
         type="text"
         placeholder={placeholder}
-        disabled={!!file}
+        disabled={!!file || isThinking}
         className="message-input"
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           setInputValue(e.target.value);
         }}
-        value={inputValue}
+        value={isThinking ? '' : inputValue}
       />
 
-      {inputValue || file ? (
+      {!isThinking && inputValue || file ? (
         <div className="buttons">
           <button
             type="button"
@@ -80,12 +88,13 @@ const ChatbotForm = () => {
           </button>
         </div>
       ) : (
-        <label className="button">
+        <label className={`button ${isThinking ? 'disabled' : ''}`}>
           <input
             id="document"
             type="file"
             name="document"
-            accept="image/png,image/jpeg,image/jpg,image/webp,application/pdf"
+            accept="image/png,image/jpg,application/pdf"
+            disabled={isThinking}
             required
             style={{ display: 'none' }}
             onChange={handleOnSelectFile}
