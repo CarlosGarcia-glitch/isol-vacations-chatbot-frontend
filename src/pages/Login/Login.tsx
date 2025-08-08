@@ -40,7 +40,7 @@ const Login = (props: Props) => {
         setLoading(true);
         try {
           await AuthService.login(vals.email, vals.password);
-          setAlert(true, 'error', t.login.alerts.success.login);
+          setAlert(true, 'success', t.login.alerts.success.login);
           navigate('/chat');
         } catch (error) {
           console.error(error);
@@ -122,7 +122,7 @@ const Login = (props: Props) => {
             <Button
               disabled={loading}
               variant="contained"
-              color="secondary"
+              color="primary"
               startIcon={
                 loading ? (
                   <CircularProgress
