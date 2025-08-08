@@ -12,7 +12,7 @@
         "login": "Email o contraseña incorrectos, inténtalo de nuevo"
       },
       "success": {
-        "login": "Usuario loggeado con éxito, redirigiendo..."
+        "login": "Usuario loggeado con éxito."
       }
     },
     "labels": {
@@ -28,6 +28,16 @@
     },
     "password": {
       "required": "La contraseña es requerida"
+    }
+  },
+  "errors": {
+    "ask_agent": {
+      "chat": "Hubo un error al intenter enviar el mensaje a ISOL chatbot. Por favor contacte a su administrador o intente de nuevo más tarde.",
+      "alert": "Error al enviar mensaje"
+    },
+    "init_chat" : {
+      "chat": "Hubo un error al intentar iniciar el chat. Por favor contacta a tu administrador o intenta de nuevo más tarde.",
+      "alert": "Error al intentar iniciar el chat."
     }
   }
 }

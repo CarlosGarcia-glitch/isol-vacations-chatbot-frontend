@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { useAppContext, useTranslations } from '../../contexts/AppContext';
+import {
+  useAlert,
+  useAppContext,
+  useTranslations,
+} from '../../contexts/AppContext';
 
 import ChatbotForm from '../../components/ChatbotForm';
 import ChatbotMessage, { IChat } from '../../components/ChatbotMessage';
@@ -19,6 +23,7 @@ const Chat = () => {
     useAppContext();
   const chatBodyRef = useRef<HTMLDivElement>(null);
   const hasInitializedRef = useRef(false);
+  const { setAlert } = useAlert();
 
   useEffect(() => {
     if (hasInitializedRef.current) return;
@@ -29,21 +34,36 @@ const Chat = () => {
         const conversationId = localStorage.getItem('conversationId');
 
         if (conversationId) {
-          const exists = await chatService.existsChat();
-          if (exists) {
-            const history = await chatService.getChatHistory();
-            setChatHistory(history);
-            setLoading(false);
-            return;
-          } else {
-            localStorage.removeItem('conversationId');
+          try {
+            const exists = await chatService.existsChat();
+            if (exists) {
+              const history = await chatService.getChatHistory();
+              setChatHistory(history);
+              setLoading(false);
+              return;
+            } else {
+              localStorage.removeItem('conversationId');
+            }
+          } catch (error) {
+            throw new Error();
           }
         }
 
-        const message = await chatService.startChat();
-        setChatHistory([{ role: 'bot', message }]);
+        try {
+          const message = await chatService.startChat();
+          setChatHistory([{ role: 'bot', message }]);
+        } catch (error) {
+          throw new Error();
+        }
       } catch (error) {
         console.error('Error initializing chat:', error);
+        setAlert(true, 'error', t.errors.init_chat.alert);
+        setChatHistory([
+          {
+            role: 'bot',
+            message: t.errors.init_chat.chat,
+          },
+        ]);
       } finally {
         setLoading(false);
       }
