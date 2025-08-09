@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useAppContext, useTranslations } from '../contexts/AppContext';
+import {
+  useAlert,
+  useAppContext,
+  useTranslations,
+} from '../contexts/AppContext';
 import { chatService } from '@/services/chatService';
 
 type ChatbotFormProps = {
@@ -13,6 +17,7 @@ const ChatbotForm = ({ isThinking, setIsThinking }: ChatbotFormProps) => {
   const [inputValue, setInputValue] = useState<string>('');
   const [file, setFile] = useState<File | null>(null);
   const [placeholder, setPlaceholder] = useState<string>('');
+  const { setAlert } = useAlert();
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,6 +40,14 @@ const ChatbotForm = ({ isThinking, setIsThinking }: ChatbotFormProps) => {
       ]);
     } catch (error) {
       console.error('Error sending message to agent:', error);
+      setAlert(true, 'error', t.errors.ask_agent.alert);
+      setChatHistory((history) => [
+        ...history,
+        {
+          role: 'bot',
+          message: t.errors.ask_agent.chat,
+        },
+      ]);
     } finally {
       setIsThinking(false);
     }

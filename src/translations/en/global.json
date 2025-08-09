@@ -29,5 +29,15 @@
     "password": {
       "required": "The password is required"
     }
+  },
+  "errors": {
+    "ask_agent": {
+      "chat": "There was an error trying to send the message to the ISOL chatbot. Please contact your administrator or try again later.",
+      "alert": "Error sending message."
+    },
+   "init_chat" : {
+      "chat": "There was an error trying to start the chat. Please contact your administrator or try again later.",
+      "alert": "Error trying to start the chat."
+    }
   }
 }
