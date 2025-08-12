@@ -39,7 +39,9 @@ const Login = (props: Props) => {
       onSubmit: async (vals: FormikValues) => {
         setLoading(true);
         try {
-          await AuthService.login(vals.email, vals.password);
+          const resp = await AuthService.login(vals.email, vals.password);
+          console.log('resp', resp);
+          localStorage.setItem('token', resp.user.accessToken);
           setAlert(true, 'success', t.login.alerts.success.login);
           navigate('/chat');
         } catch (error) {
