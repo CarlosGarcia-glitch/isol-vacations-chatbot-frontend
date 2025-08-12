@@ -8,15 +8,19 @@ import {
 import ChatbotForm from '../../components/ChatbotForm';
 import ChatbotMessage, { IChat } from '../../components/ChatbotMessage';
 import ChatbotIcon from '../../components/icons/ChatbotIcon';
-import { AuthService } from '@/services/firebase';
 import { LoginOutlined } from '@mui/icons-material';
 import { CircularProgress } from '@mui/material';
 import { chatService } from '@/services/chatService';
 import ChatbotThinking from '@/components/ChatbotThinking/ChatbotThinking';
 import './Chat.scss';
+import AuthService from '@/services/authService';
+import { useNavigate } from 'react-router-dom';
 
 const Chat = () => {
   const t = useTranslations();
+  const { setUser } = useAppContext();
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(true);
   const [isThinking, setIsThinking] = useState(false);
   const { language, setLanguage, chatHistory, setChatHistory } =
@@ -86,6 +90,19 @@ const Chat = () => {
 
   const lastBotIndex = chatHistory?.map((m) => m.role).lastIndexOf('bot');
 
+  const handleLogout = async () => {
+    try {
+      await AuthService.logout();
+      localStorage.removeItem('token');
+      setUser(null);
+    } catch (error) {
+      localStorage.removeItem('token');
+      setUser(null);
+    } finally {
+      navigate('/');
+    }
+  };
+
   return (
     <div className="container">
       <div className="chatbot-popup">
@@ -106,9 +123,7 @@ const Chat = () => {
             </div>
             <div>
               <button
-                onClick={() => {
-                  AuthService.logout();
-                }}
+                onClick={handleLogout}
                 className="material-symbols-outlined"
               >
                 <LoginOutlined sx={{ height: 38 }} />

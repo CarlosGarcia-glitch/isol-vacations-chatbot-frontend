@@ -12,6 +12,7 @@ import AlertPopup from '@/components/AlertPopup/AlertPopup';
 import { AlertColor } from '@mui/material';
 
 import { IChat } from '@/components/ChatbotMessage';
+import { User } from '@/models/User';
 
 // Define interface for Alert state
 interface AlertState {
@@ -25,6 +26,8 @@ interface AlertState {
 interface AppContextType {
   isAuth: boolean;
   setIsAuth: (value: boolean) => void;
+  user: User | null;
+  setUser: (value: User | null) => void;
   language: string;
   setLanguage: (lang: string) => void;
   alert: AlertState;
@@ -38,6 +41,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [isAuth, setIsAuth] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
   const [language, setLanguage] = useState<string>('es');
   const [chatHistory, setChatHistory] = useState<IChat[]>([]);
   const [alert, setAlert] = useState<AlertState>({
@@ -52,6 +56,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       value={{
         isAuth,
         setIsAuth,
+        user,
+        setUser,
         language,
         setLanguage,
         alert,
