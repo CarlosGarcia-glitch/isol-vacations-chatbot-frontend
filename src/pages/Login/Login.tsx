@@ -15,14 +15,14 @@ import Footer from '@/components/Footer/Footer';
 import { getLoginFormSchema } from '@/utils/schemas/loginFormSchema';
 
 import Styles from './_Login.module.scss';
-import { useAlert, useTranslations } from '@/contexts/AppContext';
-
-import { AuthService } from '@/services/firebase';
+import { useAlert, useAppContext, useTranslations } from '@/contexts/AppContext';
+import AuthService from '@/services/authService';
 
 type Props = {};
 
 const Login = (props: Props) => {
   const t = useTranslations();
+  const { setUser } = useAppContext();
   const navigate = useNavigate();
   const { setAlert } = useAlert();
 
@@ -41,7 +41,8 @@ const Login = (props: Props) => {
         try {
           const resp = await AuthService.login(vals.email, vals.password);
           console.log('resp', resp);
-          localStorage.setItem('token', resp.user.accessToken);
+          setUser(resp?.user_info);
+          localStorage.setItem('token', resp?.access_token);
           setAlert(true, 'success', t.login.alerts.success.login);
           navigate('/chat');
         } catch (error) {

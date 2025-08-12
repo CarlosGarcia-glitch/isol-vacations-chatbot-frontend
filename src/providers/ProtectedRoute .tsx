@@ -1,26 +1,35 @@
 import { useEffect, useState } from 'react';
-import { User } from 'firebase/auth';
 import { Navigate, Outlet } from 'react-router-dom';
-import { AuthService } from '../services/firebase';
 import LoadingPage from '@/components/LoadingPage/LoadingPage';
+import AuthService from '@/services/authService';
+import { useAppContext } from '@/contexts/AppContext';
 
 export const ProtectedRoute = () => {
+  const { user, setUser } = useAppContext();
   const [authState, setAuthState] = useState<{
-    user: User | null;
-    loading: boolean;
-  }>({ user: null, loading: true });
+    isValidating: boolean;
+    isAuthenticated: boolean
+  }>({ isValidating: !user, isAuthenticated: Boolean(user) });
 
   useEffect(() => {
-    const unsubscribe = AuthService.onAuthStateChanged((user) => {
-      setAuthState({ user, loading: false });
-    });
+    if (!authState.isAuthenticated) {
+      const getAuth = async () => {
+        try {
+          const resp = await AuthService.getCurrentUser();
+          setUser(resp);
+          setAuthState({ isValidating: false, isAuthenticated: true });
+        } catch (error) {
+          setAuthState(prevState => ({ ...prevState, isValidating: false }))
+        }
+      }
+  
+      getAuth();
+    }
+  }, [authState.isAuthenticated, setUser]);
 
-    return () => unsubscribe();
-  }, []);
-
-  if (authState.loading) {
+  if (authState.isValidating) {
     return <LoadingPage />;
   }
 
-  return authState.user ? <Outlet /> : <Navigate to="/" replace />;
+  return authState.isAuthenticated ? <Outlet /> : <Navigate to="/" replace />;
 };
