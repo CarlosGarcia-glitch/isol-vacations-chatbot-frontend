@@ -30,8 +30,8 @@ const ChatbotForm = ({ isThinking, setIsThinking }: ChatbotFormProps) => {
     ]);
 
     try {
-      const { response: botResponse } =
-        await chatService.sendMessage(userMessage);
+      const botResponse = await chatService.sendMessage(userMessage);
+
       setChatHistory((history) => [
         ...history,
         { role: 'bot', message: botResponse },
