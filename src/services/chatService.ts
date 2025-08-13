@@ -5,9 +5,6 @@ interface SessionResponse {
   session_id: string;
 }
 
-interface AgentResponse {
-  response: string;
-}
 
 const getConversationId = (): string | null => {
   return localStorage.getItem('conversationId');
@@ -58,7 +55,8 @@ export const chatService = {
   },
 
   async createChatSession(): Promise<SessionResponse> {
-    return await api.post('/chat/session');
+    const response = await api.post('/chat/session');
+    return response.data
   },
 
   async sendMessageToAgent(inputMessage: string, file: File | null) {
@@ -84,9 +82,10 @@ export const chatService = {
     return response.data.message as string;
   },
 
-  async sendMessage(message: string): Promise<AgentResponse> {
+  async sendMessage(message: string): Promise<string> {
     const sessionId = getSessionId();
     if (!sessionId) throw new Error('No session ID found.');
-    return api.post(`/chat/session/${sessionId}/message`, { text: message });
+    const response = await api.post(`/chat/session/${sessionId}/message`, { text: message });
+    return response.data.messages[0]
   },
 };

@@ -1,3 +1,4 @@
+import { User } from '@/models/User';
 import api from './axiosInstance';
 
 interface LoginUrlResponse {
@@ -10,7 +11,8 @@ class AuthService {
   }
 
   static async getLoginUrl(): Promise<LoginUrlResponse> {
-    return await api.get('/login');
+    const response = await api.get('/login');
+    return response.data
   }
 
   static async logout() {
@@ -22,9 +24,9 @@ class AuthService {
     return resp.data;
   }
 
-  static async getCurrentUser() {
-    const resp = await api.get('/me');
-    return resp.data;
+  static async getCurrentUser(): Promise<User> {
+    const response =  await api.get('/me');
+    return response.data
   }
 }
 
