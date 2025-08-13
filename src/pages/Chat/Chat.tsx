@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Chat = () => {
   const t = useTranslations();
-  const { setUser } = useAppContext();
+  const { setUser, user } = useAppContext();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
@@ -35,32 +35,15 @@ const Chat = () => {
 
     const initChat = async () => {
       try {
-        const conversationId = localStorage.getItem('conversationId');
-
-        if (conversationId) {
-          try {
-            const exists = await chatService.existsChat();
-            if (exists) {
-              const history = await chatService.getChatHistory();
-              setChatHistory(history);
-              setLoading(false);
-              return;
-            } else {
-              localStorage.removeItem('conversationId');
-            }
-          } catch (error) {
-            throw new Error();
-          }
-        }
-
-        try {
-          const message = await chatService.startChat();
-          setChatHistory([{ role: 'bot', message }]);
-        } catch (error) {
-          throw new Error();
-        }
-      } catch (error) {
-        console.error('Error initializing chat:', error);
+        const { session_id } = await chatService.createChatSession();
+        localStorage.setItem('sessionId', session_id);
+        setChatHistory([
+          {
+            message: `¡Hola, ${user?.given_name}! ¿Cómo puedo ayudarte a planear tu próximo día de vacaciones?`,
+            role: 'bot',
+          },
+        ]);
+      } catch (err) {
         setAlert(true, 'error', t.errors.init_chat.alert);
         setChatHistory([
           {
@@ -68,6 +51,7 @@ const Chat = () => {
             message: t.errors.init_chat.chat,
           },
         ]);
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -93,12 +77,11 @@ const Chat = () => {
   const handleLogout = async () => {
     try {
       await AuthService.logout();
-      localStorage.removeItem('token');
-      setUser(null);
     } catch (error) {
+      console.log(error);
+    } finally {
       localStorage.removeItem('token');
       setUser(null);
-    } finally {
       navigate('/');
     }
   };
