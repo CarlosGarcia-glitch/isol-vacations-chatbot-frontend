@@ -30,10 +30,8 @@ const ChatbotForm = ({ isThinking, setIsThinking }: ChatbotFormProps) => {
     ]);
 
     try {
-      const botResponse = await chatService.sendMessageToAgent(
-        userMessage,
-        file,
-      );
+      const { response: botResponse } =
+        await chatService.sendMessage(userMessage);
       setChatHistory((history) => [
         ...history,
         { role: 'bot', message: botResponse },
@@ -87,8 +85,8 @@ const ChatbotForm = ({ isThinking, setIsThinking }: ChatbotFormProps) => {
         value={isThinking ? '' : inputValue}
       />
 
-      {!isThinking && inputValue || file ? (
-        <div className="buttons">
+      <div className="buttons">
+        {!!inputValue && !isThinking && (
           <button
             type="button"
             className="material-symbols-outlined button clear"
@@ -96,25 +94,15 @@ const ChatbotForm = ({ isThinking, setIsThinking }: ChatbotFormProps) => {
           >
             close_small
           </button>
-          <button type="submit" className="material-symbols-outlined button">
-            send
-          </button>
-        </div>
-      ) : (
-        <label className={`button ${isThinking ? 'disabled' : ''}`}>
-          <input
-            id="document"
-            type="file"
-            name="document"
-            accept="image/png,image/jpg,application/pdf"
-            disabled={isThinking}
-            required
-            style={{ display: 'none' }}
-            onChange={handleOnSelectFile}
-          />
-          <span className="material-symbols-outlined">attach_file</span>
-        </label>
-      )}
+        )}
+        <button
+          type="submit"
+          className="material-symbols-outlined button"
+          disabled={!inputValue || isThinking}
+        >
+          send
+        </button>
+      </div>
     </form>
   );
 };
