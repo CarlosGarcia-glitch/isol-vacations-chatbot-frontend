@@ -25,7 +25,6 @@ const Login = (props: {}) => {
     try {
       const userData = await AuthService.getCurrentUser();
       setUser(userData);
-      localStorage.setItem('token', userData?.access_token);
       setAlert(true, 'success', t.login.alerts.success.login);
       navigate('/chat');
     } catch (error) {
@@ -51,7 +50,7 @@ const Login = (props: {}) => {
           clearInterval(timer);
           await checkUserSession();
         }
-      }, 500);
+      }, 1000);
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
       setLoading(false);
