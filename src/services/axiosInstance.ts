@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL_CHAT,
+  withCredentials: true
 });
 
 api.interceptors.request.use((config) => {
