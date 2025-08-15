@@ -12,6 +12,7 @@ import {
 } from '@/contexts/AppContext';
 import AuthService from '@/services/authService';
 import Styles from './_Login.module.scss';
+import ChatbotIcon from '@/components/icons/ChatbotIcon';
 
 const Login = (props: {}) => {
   const t = useTranslations();
@@ -61,7 +62,9 @@ const Login = (props: {}) => {
     <div className={Styles.page__layout}>
       <div className={Styles.page__content}>
         <div className={Styles.login__card}>
-          <div className={Styles.login__card_img}></div>
+          <div className={Styles.login__card_img}>
+            <ChatbotIcon />
+          </div>
           <div className={Styles.login__card_body}>
             <div className={Styles.login__card_title}>
               <h3>{t.login.labels.title}</h3>
