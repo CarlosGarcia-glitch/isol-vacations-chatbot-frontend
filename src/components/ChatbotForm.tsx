@@ -1,11 +1,11 @@
+import { chatService } from '@/services/chatService';
+import { TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import {
   useAlert,
   useAppContext,
   useTranslations,
 } from '../contexts/AppContext';
-import { chatService } from '@/services/chatService';
-import { TextField } from '@mui/material';
 
 type ChatbotFormProps = {
   isThinking: boolean;
@@ -23,7 +23,7 @@ const ChatbotForm = ({ isThinking, setIsThinking }: ChatbotFormProps) => {
     e.preventDefault();
 
     setIsThinking(true);
-    const userMessage = inputValue;
+    const userMessage = inputValue.trim();
     setChatHistory((history) => [
       ...history,
       { role: 'user', message: userMessage },
@@ -53,7 +53,6 @@ const ChatbotForm = ({ isThinking, setIsThinking }: ChatbotFormProps) => {
     setInputValue('');
   };
 
-
   useEffect(() => {
     const text = t.input.placeholder;
     setPlaceholder(text);
@@ -62,7 +61,7 @@ const ChatbotForm = ({ isThinking, setIsThinking }: ChatbotFormProps) => {
   return (
     <form onSubmit={onSubmit} className="chat-form">
       <TextField
-        size='medium'
+        size="medium"
         multiline
         maxRows={4}
         id="message"
@@ -71,6 +70,26 @@ const ChatbotForm = ({ isThinking, setIsThinking }: ChatbotFormProps) => {
         className="message-input"
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           setInputValue(e.target.value);
+        }}
+        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey) {
+            e.preventDefault();
+            const form = e.currentTarget.closest('form');
+            if (form) {
+              form.requestSubmit();
+            }
+          } else if (
+            (e.key === 'Enter' && e.ctrlKey) ||
+            (e.key === 'Enter' && e.shiftKey)
+          ) {
+            // Add new line for Ctrl+Enter or Alt+Enter
+            const target = e.target as HTMLInputElement;
+            const start = target.selectionStart ?? 0;
+            const end = target.selectionEnd ?? 0;
+            const newValue =
+              inputValue.substring(0, start) + inputValue.substring(end);
+            setInputValue(newValue);
+          }
         }}
         value={isThinking ? '' : inputValue}
         sx={{
@@ -113,7 +132,7 @@ const ChatbotForm = ({ isThinking, setIsThinking }: ChatbotFormProps) => {
                 </button>
               </div>
             ),
-          }
+          },
         }}
       />
     </form>
