@@ -43,13 +43,16 @@ const Login = (props: {}) => {
       const popup = window.open(
         auth_url,
         'google-login',
-        'width=500,height=600,noopener,noreferrer',
+        'width=500,height=600',
       );
 
       const timer = setInterval(async () => {
-        if (!popup || popup.closed) {
-          clearInterval(timer);
-          await checkUserSession();
+        if (!popup || popup?.closed) {
+          console.log('checking user auth');
+          await checkUserSession().then(() => {
+            console.log('user checked, clearing interval');
+            clearInterval(timer);
+          });
         }
       }, 1000);
     } catch (error) {
