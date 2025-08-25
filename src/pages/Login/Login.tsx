@@ -48,9 +48,7 @@ const Login = (props: {}) => {
 
       const timer = setInterval(async () => {
         if (!popup || popup?.closed) {
-          console.log('checking user auth');
           await checkUserSession().then(() => {
-            console.log('user checked, clearing interval');
             clearInterval(timer);
           });
         }
