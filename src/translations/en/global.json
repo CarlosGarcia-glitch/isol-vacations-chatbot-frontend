@@ -16,7 +16,8 @@
       }
     },
     "labels": {
-      "title": "Welcome to ISOL",
+      "title": "Welcome to ISOL!",
+      "description": "Sign in to chat with your personal Vacation Agent.",
       "email": "Email",
       "password": "Password",
       "signIn": "Sign in",

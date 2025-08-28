@@ -16,10 +16,11 @@
       }
     },
     "labels": {
-      "title": "Bienvenidos a ISOL",
+      "title": "Bienvenido a ISOL",
+      "description": "Inicia sesión para chatear con tu agente personal de Vacaciones.", 
       "email": "Email",
       "password": "Contaseña",
-      "signIn": "Iniciar sesión",
+      "signIn": "Iniciar sesión con google",
       "signingIn": "Iniciando"
     },
     "email": {

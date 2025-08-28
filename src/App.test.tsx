@@ -17,12 +17,10 @@ describe('App', () => {
     );
     
     expect(
-      screen.getByRole('heading', { level: 3, name: 'Bienvenidos a ISOL' }),
+      screen.getByRole('heading', { level: 3, name: 'Bienvenido a ISOL' }),
     ).toBeInTheDocument();
-    expect(screen.getByRole('textbox', {name: /email/i})).toBeInTheDocument()
-    expect(screen.getByTestId('password-input')).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: 'Iniciar sesión' }),
+      screen.getByRole('button', { name: /Iniciar sesión con google/i }),
     ).toBeInTheDocument();
     expect(
       screen.getByText('© 2025 by ISOL. All rights reserved'),

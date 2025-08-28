@@ -1,4 +1,4 @@
-export type UserRole = "USER" | "ADMIN";
+export type UserRole = 'USER' | 'ADMIN';
 
 export class User {
   id: string;
@@ -13,6 +13,10 @@ export class User {
   createdAt: Date;
   updatedAt: Date;
   lastLogin: Date;
+  name: string;
+  picture: string;
+  given_name: string;
+  family_name: string;
 
   constructor(data: {
     id: string;
@@ -27,6 +31,10 @@ export class User {
     created_at: string;
     updated_at: string;
     last_login: string;
+    name: string;
+    picture: string;
+    given_name: string;
+    family_name: string;
   }) {
     this.id = data.id;
     this.username = data.username;
@@ -40,5 +48,9 @@ export class User {
     this.createdAt = new Date(data.created_at);
     this.updatedAt = new Date(data.updated_at);
     this.lastLogin = new Date(data.last_login);
+    this.name = data.name;
+    this.picture = data.picture;
+    this.given_name = data.given_name;
+    this.family_name = data.family_name;
   }
 }

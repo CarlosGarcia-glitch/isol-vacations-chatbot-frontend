@@ -1,8 +1,17 @@
 // services/chatService.ts
 import api from './axiosInstance';
 
+interface SessionResponse {
+  session_id: string;
+}
+
+
 const getConversationId = (): string | null => {
   return localStorage.getItem('conversationId');
+};
+
+const getSessionId = (): string | null => {
+  return localStorage.getItem('sessionId');
 };
 
 export const chatService = {
@@ -45,6 +54,11 @@ export const chatService = {
     return formattedMessages;
   },
 
+  async createChatSession(): Promise<SessionResponse> {
+    const response = await api.post('/chat/session');
+    return response.data
+  },
+
   async sendMessageToAgent(inputMessage: string, file: File | null) {
     const conversationId = getConversationId();
     if (!conversationId) throw new Error('No conversation ID found.');
@@ -66,5 +80,12 @@ export const chatService = {
     );
 
     return response.data.message as string;
+  },
+
+  async sendMessage(message: string): Promise<string> {
+    const sessionId = getSessionId();
+    if (!sessionId) throw new Error('No session ID found.');
+    const response = await api.post(`/chat/session/${sessionId}/message`, { text: message });
+    return response.data.messages[0]
   },
 };

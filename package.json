@@ -1,5 +1,5 @@
 {
-  "name": "chatbot-isol-frontend",
+  "name": "isol-vacations-chatbot-frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -21,6 +21,7 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.2.0",
     "@mui/material": "^7.2.0",
+    "@react-oauth/google": "^0.12.2",
     "axios": "^1.11.0",
     "firebase": "^11.10.0",
     "formik": "^2.4.6",
